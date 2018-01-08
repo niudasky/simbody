@@ -1413,4 +1413,47 @@ template <> class CNT<double> : public NTraits<double> { };
 
 #endif // SimTK_REAL_IS_ADOUBLE
 
+namespace SimTK {
+    template <typename T> typename NTraits<T>::TSqrt sqrt(const T& t)
+    {return NTraits<T>::sqrt(t);}
+    template <typename T> typename NTraits<T>::TAbs  abs(const T& t)
+    {return NTraits<T>::abs(t);}
+    template <typename T> typename NTraits<T>::T     sin(const T& t)
+    {return NTraits<T>::sin(t);}
+    template <typename T> typename NTraits<T>::T     cos(const T& t)
+    {return NTraits<T>::cos(t);}
+    template <typename T> typename NTraits<T>::T     floor(const T& t)
+    {return NTraits<T>::floor(t);}
+    template <typename T> typename NTraits<T>::T
+    pow(const T& t, const T& order)
+    {return NTraits<T>::pow(t, order);}
+    template <typename T> typename NTraits<T>::T     exp(const T& t)
+    {return NTraits<T>::exp(t);}
+    template <typename T> typename NTraits<T>::T     log(const T& t)
+    {return NTraits<T>::log(t);}
+    template <typename T> typename NTraits<T>::T     tan(const T& t)
+    {return NTraits<T>::tan(t);}
+    template <typename T> typename NTraits<T>::T     asin(const T& t)
+    {return NTraits<T>::asin(t);}
+    template <typename T> typename NTraits<T>::T     acos(const T& t)
+    {return NTraits<T>::acos(t);}
+    template <typename T> typename NTraits<T>::T     atan(const T& t)
+    {return NTraits<T>::atan(t);}
+    template <typename T> typename NTraits<T>::T
+    atan2(const T& t, const T& t2) {return NTraits<T>::atan2(t,t2);}
+    template <typename T> typename NTraits<T>::T     sinh(const T& t)
+    {return NTraits<T>::sinh(t);}
+    template <typename T> typename NTraits<T>::T     cosh(const T& t)
+    {return NTraits<T>::cosh(t);}
+    template <typename T> typename NTraits<T>::T     tanh(const T& t)
+    {return NTraits<T>::tanh(t);}
+    template <typename T> typename NTraits<T>::T
+    max(const T& t, const T& t2) {return NTraits<T>::max(t,t2);}
+    template <typename T> typename NTraits<T>::T
+    min(const T& t, const T& t2) {return NTraits<T>::min(t,t2);}
+    template <typename T> typename NTraits<T>::T     log10(const T& t)
+    {return NTraits<T>::log10(t);}
+
+} // namespace SimTK
+
 #endif //SimTK_SIMMATRIX_NTRAITS_H_

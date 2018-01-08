@@ -135,8 +135,8 @@ static void computeBoundingSphereForVertices(const vector<float>& vertices, floa
     fVec3 upper = lower;
     for (int i = 3; i < (int) vertices.size(); i += 3) {
         for (int j = 0; j < 3; j++) {
-            lower[j] = min(lower[j], vertices[i+j]);
-            upper[j] = max(upper[j], vertices[i+j]);
+            lower[j] = SimTK::min(lower[j], vertices[i+j]);
+            upper[j] = SimTK::max(upper[j], vertices[i+j]);
         }
     }
     center = (lower+upper)/2;
@@ -243,7 +243,7 @@ public:
     void computeBoundingSphere(float& radius, fVec3& center) const {
         meshes[meshIndex][resolution]->getBoundingSphere(radius, center);
         center += transform.p();
-        radius *= max(abs(scale[0]), max(abs(scale[1]), abs(scale[2])));
+        radius *= SimTK::max(abs(scale[0]), SimTK::max(abs(scale[1]), abs(scale[2])));
     }
 private:
     fTransform transform;
@@ -811,14 +811,14 @@ static void computeSceneBounds(const Scene* scene, float& radius, fVec3& center)
         fVec3 upper = centers[0]+radii[0];
         for (int i = 1; i < (int) centers.size(); i++) {
             for (int j = 0; j < 3; j++) {
-                lower[j] = min(lower[j], centers[i][j]-radii[i]);
-                upper[j] = max(upper[j], centers[i][j]+radii[i]);
+                lower[j] = SimTK::min(lower[j], centers[i][j]-radii[i]);
+                upper[j] = SimTK::max(upper[j], centers[i][j]+radii[i]);
             }
         }
         center = (lower+upper)/2;
         radius = 0;
         for (int i = 0; i < (int) centers.size(); i++)
-            radius = max(radius, (centers[i]-center).norm()+radii[i]);
+            radius = SimTK::max(radius, (centers[i]-center).norm()+radii[i]);
     }
 }
 
@@ -831,7 +831,7 @@ static void zoomCameraToShowWholeScene(bool sceneAlreadyLocked=false) {
     if (!sceneAlreadyLocked)
         pthread_mutex_unlock(&sceneLock);       //----- UNLOCK SCENE ---------
    float viewDistance = 
-        radius/tan(min(fieldOfView, fieldOfView*viewWidth/viewHeight)/2);
+        radius/tan(SimTK::min(fieldOfView, fieldOfView*viewWidth/viewHeight)/2);
     // Back up 1 unit more to make sure we don't clip at this position.
     // Also add a modest offset in the (x,y) direction to avoid edge-on views.
     const float offset = std::max(1.f, viewDistance/10);
@@ -1266,7 +1266,8 @@ static void drawGroundAndSky(float farClipDistance) {
             float x = i/(float) width;
             for (int j = 0; j < width; j++) {
                 float y = j/(float) width;
-                double line = min(min(min(x, y), 1.0f-x), 1.0f-y);
+                double line =
+                    SimTK::min(SimTK::min(SimTK::min(x, y), 1.0f-x), 1.0f-y);
                 float noise = (rand()%255)/255.0f-0.5f;
                 groundImage[i*width+j] = float(std::pow(line,.1)*(.35f+noise));
             }
@@ -1441,15 +1442,15 @@ static void renderScene(std::vector<std::string>* screenText = NULL) {
         float nearClipDistance, farClipDistance;
         if (showGround) {
             nearClipDistance = nearClip;
-            const float wantFarClipDistance = min(farClip,
-                                                  max(2*sceneScale, 2*(centerDepth+sceneRadius)));
+            const float wantFarClipDistance = SimTK::min(farClip,
+                SimTK::max(2*sceneScale, 2*(centerDepth+sceneRadius)));
             if (std::abs(wantFarClipDistance-prevFarClip) <= 0.5*prevFarClip)
                 farClipDistance = prevFarClip; // hysteresis to avoid jiggling ground
             else farClipDistance = wantFarClipDistance;
         }
         else {
-            nearClipDistance = max(nearClip, centerDepth-sceneRadius);
-            farClipDistance = min(farClip, centerDepth+sceneRadius);
+            nearClipDistance = SimTK::max(nearClip, centerDepth-sceneRadius);
+            farClipDistance = SimTK::min(farClip, centerDepth+sceneRadius);
         }
         prevNearClip = nearClipDistance;
         prevFarClip  = farClipDistance;

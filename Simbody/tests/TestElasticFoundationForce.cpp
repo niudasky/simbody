@@ -32,7 +32,8 @@ const Real TOL = 1e-5;
 
 template <class T>
 void assertEqual(T val1, T val2) {
-    ASSERT(abs(val1-val2) < TOL || abs(val1-val2)/max(abs(val1), abs(val2)) < TOL);
+    ASSERT(abs(val1-val2) < TOL ||
+           abs(val1-val2)/SimTK::max(abs(val1), abs(val2)) < TOL);
 }
 
 template <int N>

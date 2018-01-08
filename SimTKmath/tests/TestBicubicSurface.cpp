@@ -582,7 +582,7 @@ void testBicubicCoefficients(Real xmin,Real xmax,Real ymin, Real ymax,
 void testBicubicConsistencyContinuity(Real xmin, Real xmax, Real ymin, 
              Real ymax, int fcnType, Real smoothness, bool verbosePrint){
     int size = 4;
-    Real minstep = min((xmax-xmin),(ymax-ymin));
+    Real minstep = SimTK::min((xmax-xmin),(ymax-ymin));
     Real dh = (minstep/(Real)size)/100.0;
 
     Vector xV(size), yV(size),dxV(4),dyV(4), tmpV(4), aXY(2);
@@ -860,7 +860,7 @@ void testCopyConstEqOp(){
     Real smoothness = 0.1;
 
     int size = 4;
-    Real minstep = min((xmax-xmin),(ymax-ymin));
+    Real minstep = SimTK::min((xmax-xmin),(ymax-ymin));
     Real dh = (minstep/(Real)size)/100.0;
 
     Vector xV(size), yV(size),dxV(4),dyV(4), tmpV(4), aXY(2);

@@ -51,8 +51,12 @@ void verifyPointContact(const Array_<Contact>& contacts, int surface1, int surfa
     assertEqual((int) c.getSurface2(), surface2);
     assertEqual(c.getNormal(), normal);
     assertEqual(c.getDepth(), depth);
-    assertEqual(min(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()), min(r1, r2));
-    assertEqual(max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()), max(r1, r2));
+    assertEqual(
+        SimTK::min(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()),
+        SimTK::min(r1, r2));
+    assertEqual(
+        SimTK::max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()),
+        SimTK::max(r1, r2));
     assertEqual(c.getEffectiveRadiusOfCurvature(), sqrt(r1*r2));
     assertEqual(c.getLocation(), location);
 }
@@ -179,8 +183,9 @@ void testHalfSpaceEllipsoid() {
     const PointContact& c = static_cast<const PointContact&>(contacts.getContacts(state, setIndex)[0]);
     assertEqual(c.getNormal(), Vec3(0, 1, 0));
     ASSERT(c.getDepth() < 0.3);
-    assertEqual(min(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()), 0.8);
-    ASSERT(max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()) > 1.5 && max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()) < 2.1);
+    assertEqual(
+        SimTK::min(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()), 0.8);
+    ASSERT(SimTK::max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()) > 1.5 && SimTK::max(c.getRadiusOfCurvature1(), c.getRadiusOfCurvature2()) < 2.1);
     assertEqual(c.getLocation()[0], 0.1);
     assertEqual(c.getLocation()[1], 1-c.getDepth()/2);
     ASSERT(c.getLocation()[2] > 0);

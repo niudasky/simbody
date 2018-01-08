@@ -39,7 +39,7 @@ void assertEqual(T val1, T val2, double tol=TOL) {
 
 template <int N>
 void assertEqual(Vec<N> val1, Vec<N> val2, double tol) {
-    double norm = max(val1.norm(), 1.0);
+    double norm = SimTK::max(val1.norm(), 1.0);
     for (int i = 0; i < N; ++i)
         ASSERT(abs(val1[i]-val2[i]) < tol*norm);
 }
