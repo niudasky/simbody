@@ -564,12 +564,15 @@ endif()
 if(UNIX)
     if(NOT APPLE)
         set(REALTIME_LIB rt)
+        # We do not use pthreads directly anymore, but on Linux, C++11 threads
+        # are implemented with pthreads, and we must link to it.
+        set(PTHREAD_LIB pthread)
     endif()
     set(MATH_LIBRARY m)
     set(DL_LIBRARY dl)
 endif()
 
-set(MATH_LIBS_TO_USE    ${LAPACK_BEING_USED} pthread
+set(MATH_LIBS_TO_USE    ${LAPACK_BEING_USED} ${PTHREAD_LIB}
                         ${REALTIME_LIB} ${DL_LIBRARY} ${MATH_LIBRARY})
 set(MATH_LIBS_TO_USE_VN ${MATH_LIBS_TO_USE})
 
@@ -609,7 +612,10 @@ if(BUILD_TESTING)
     add_custom_target(RUN_TESTS_PARALLEL COMMAND ${cmd})
 endif()
 
-include(ApiDoxygen.cmake)
+# These are used in Doxyfile.in and SimbodyConfig.cmake.in.
+set(SIMBODY_INSTALL_DOXYGENDIR   "${CMAKE_INSTALL_DOCDIR}/api")
+set(SIMBODY_DOXYGEN_TAGFILE_NAME "SimbodyDoxygenTagfile")
+add_subdirectory(doc)
 
 # Specify where visualizer should be installed. This needs to be in the
 # root CMakeLists.txt so the cmake config file can see this value.
@@ -648,7 +654,7 @@ if( BUILD_EXAMPLES )
     add_subdirectory( examples )
 endif()
 
-file(GLOB TOPLEVEL_DOCS LICENSE.txt *.md doc/*.pdf doc/*.txt doc/*.md)
+file(GLOB TOPLEVEL_DOCS LICENSE.txt *.md doc/*.pdf doc/*.md)
 install(FILES ${TOPLEVEL_DOCS} DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 # Add uninstall target
@@ -715,12 +721,12 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/SampleCMakeLists.txt
 if(WIN32)
     if(${PLATFORM_ABI} MATCHES "x64")
         # win 64 bits
-        set(PKGCONFIG_PLATFORM_LIBS "-lliblapack -llibblas -lpthreadVC2_x64")
+        set(PKGCONFIG_PLATFORM_LIBS "-lliblapack -llibblas")
     else()
-        set(PKGCONFIG_PLATFORM_LIBS "-lliblapack -llibblas -lpthreadVC2")
+        set(PKGCONFIG_PLATFORM_LIBS "-lliblapack -llibblas")
     endif()
 elseif(APPLE)
-    set(PKGCONFIG_PLATFORM_LIBS     "-llapack -lblas -lpthread -ldl")
+    set(PKGCONFIG_PLATFORM_LIBS     "-llapack -lblas -ldl")
 else()
     set(PKGCONFIG_PLATFORM_LIBS     "-llapack -lblas -lpthread -lrt -ldl -lm")
 endif()
